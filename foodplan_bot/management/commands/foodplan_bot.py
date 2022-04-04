@@ -108,7 +108,10 @@ def ask_contact(update, context):
     else:
         context.user_data['surname'] = update.message.text
 
-    phone_request_button = KeyboardButton('Передать контакт', request_contact=True)
+    phone_request_button = KeyboardButton(
+        'Передать контакт',
+        request_contact=True
+    )
     update.message.reply_text(
         'Передайте контакт для сохранения номера телефона',
         reply_markup=ReplyKeyboardMarkup(
@@ -125,7 +128,7 @@ def complete_registration(update, context):
     if not context.user_data['name']:
         context.user_data['name'] = 'noname'
     if not context.user_data['surname']:
-        context.user_data['surname'] = 'nosurname'    
+        context.user_data['surname'] = 'nosurname'
     User.objects.create(
         tg_id=context.user_data['tg_id'],
         name=context.user_data['name'],
@@ -259,9 +262,9 @@ def confirm_subscription(update, context):
         cost = int(context.user_data['subscription_term']) * 150 * 0.9
     else:
         cost = int(context.user_data['subscription_term']) * 150
-    
+
     context.user_data['cost'] = cost
-    
+
     update.message.reply_text(
         dedent(
             f'''
@@ -342,18 +345,33 @@ def show_subscriptions(update, context):
 
     if user.subscriptions:
         if not context.user_data.get('current_subscription'):
-            context.user_data['current_subscription'] = int(max(user.subscriptions))
+            context.user_data['current_subscription'] = int(
+                max(user.subscriptions)
+            )
 
-        subscription = user.subscriptions[str(context.user_data['current_subscription'])]
+        subscription = user.subscriptions[
+            str(context.user_data['current_subscription'])
+        ]
 
         if len(user.subscriptions) == 1:
             reply_keyboard = [['Показать блюдо'], ['Создать подписку']]
         elif context.user_data['current_subscription'] == 1:
-            reply_keyboard = [['Показать блюдо', 'Далее'], ['Создать подписку']]
-        elif context.user_data['current_subscription'] == len(user.subscriptions):
-            reply_keyboard = [['Назад', 'Показать блюдо'], ['Создать подписку']]
+            reply_keyboard = [
+                ['Показать блюдо', 'Далее'],
+                ['Создать подписку']
+            ]
+        elif context.user_data['current_subscription'] == len(
+            user.subscriptions
+        ):
+            reply_keyboard = [
+                ['Назад', 'Показать блюдо'],
+                ['Создать подписку']
+            ]
         else:
-            reply_keyboard = [['Назад', 'Показать блюдо', 'Далее'], ['Создать подписку']]
+            reply_keyboard = [
+                ['Назад', 'Показать блюдо', 'Далее'],
+                ['Создать подписку']
+            ]
 
         update.message.reply_text(
             dedent(
@@ -372,7 +390,7 @@ def show_subscriptions(update, context):
             )
         )
         return SUBSCRIPTIONS_MENU
-        
+
     else:
         update.message.reply_text(
             'У Вас пока нет подписок',
@@ -446,23 +464,43 @@ def main() -> None:
                 MessageHandler(Filters.contact, complete_registration),
             ],
             MAIN_MENU: [
-                MessageHandler(Filters.regex('^Создать подписку$'), ask_menu_type),
-                MessageHandler(Filters.regex('^Мои подписки$'), show_subscriptions),
+                MessageHandler(
+                    Filters.regex('^Создать подписку$'), ask_menu_type
+                ),
+                MessageHandler(
+                    Filters.regex('^Мои подписки$'), show_subscriptions
+                ),
             ],
             GET_MENU_TYPE: [
-                MessageHandler(Filters.regex('^Классическое$|^Низкоуглеводное$|^Вегетарианское$|^Кето$'), ask_persons_number),
+                MessageHandler(
+                    Filters.regex(
+                        '^Классическое$|^Низкоуглеводное$|^Вегетарианское$|^Кето$'
+                    ),
+                    ask_persons_number
+                ),
             ],
             GET_PERSONS_NUMBER: [
-                MessageHandler(Filters.regex('^1$|^2$|^3$|^4$|^5$|^6$'), ask_meals_number),
+                MessageHandler(
+                    Filters.regex('^1$|^2$|^3$|^4$|^5$|^6$'), ask_meals_number
+                ),
             ],
             GET_MEALS_NUMBER: [
-                MessageHandler(Filters.regex('^1$|^2$|^3$|^4$|^5$|^6$'), ask_allergie),
+                MessageHandler(
+                    Filters.regex('^1$|^2$|^3$|^4$|^5$|^6$'), ask_allergie
+                ),
             ],
             GET_ALLERGIE: [
-                MessageHandler(Filters.regex('^Рыба и морепродукты$|^Мясо$|^Зерновые$|^Продукты пчеловодства$|^Орехи и бобовые$|^Молочные продукты$|^Пропустить$'), ask_subscription_term),
+                MessageHandler(
+                    Filters.regex(
+                        '^Рыба и морепродукты$|^Мясо$|^Зерновые$|^Продукты пчеловодства$|^Орехи и бобовые$|^Молочные продукты$|^Пропустить$'
+                    ),
+                    ask_subscription_term
+                ),
             ],
             GET_SUBSCRIPTION_TERM: [
-                MessageHandler(Filters.regex('^1$|^3$|^6$|^12$'), ask_promocode),
+                MessageHandler(
+                    Filters.regex('^1$|^3$|^6$|^12$'), ask_promocode
+                ),
             ],
             GET_PROMOCODE: [
                 MessageHandler(Filters.text, confirm_subscription),
@@ -477,9 +515,13 @@ def main() -> None:
                 MessageHandler(Filters.successful_payment, success_payment)
             ],
             SUBSCRIPTIONS_MENU: [
-                MessageHandler(Filters.regex('^Создать подписку$'), ask_menu_type),
+                MessageHandler(
+                    Filters.regex('^Создать подписку$'), ask_menu_type
+                ),
                 MessageHandler(Filters.regex('^Показать блюдо$'), stub),
-                MessageHandler(Filters.regex('^Назад$'), previous_subscription),
+                MessageHandler(
+                    Filters.regex('^Назад$'), previous_subscription
+                ),
                 MessageHandler(Filters.regex('^Далее$'), next_subscription),
             ]
         },
@@ -498,6 +540,7 @@ def main() -> None:
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
+
 
 class Command(BaseCommand):
     help = 'Телеграм-бот'
