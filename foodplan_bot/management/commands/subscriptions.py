@@ -24,7 +24,7 @@ def add_subscription(user_data):
         'menu_type': user_data['menu_type'],
         'persons_number': user_data['persons_number'],
         'meals_number': user_data['meals_number'],
-        'allergies': user_data['allergies'],
+        'allergie': user_data['allergie'],
         'end_date': formatted_end_date,
     }
 

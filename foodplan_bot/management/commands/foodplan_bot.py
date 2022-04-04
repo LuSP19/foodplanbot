@@ -30,7 +30,7 @@ from .subscriptions import add_subscription
     GET_MENU_TYPE,
     GET_PERSONS_NUMBER,
     GET_MEALS_NUMBER,
-    GET_ALLERGIES,
+    GET_ALLERGIE,
     GET_SUBSCRIPTION_TERM,
     GET_PROMOCODE,
     TAKE_PAYMENT,
@@ -198,7 +198,7 @@ def ask_meals_number(update, context):
     return GET_MEALS_NUMBER
 
 
-def ask_allergies(update, context):
+def ask_allergie(update, context):
     context.user_data['meals_number'] = update.message.text
 
     reply_keyboard = [
@@ -209,21 +209,21 @@ def ask_allergies(update, context):
     ]
 
     update.message.reply_text(
-        'Укажите имеющиеся аллергии',
+        'Укажите имеющуюся аллергию',
         reply_markup=ReplyKeyboardMarkup(
             reply_keyboard,
             resize_keyboard=True,
         ),
     )
 
-    return GET_ALLERGIES
+    return GET_ALLERGIE
 
 
 def ask_subscription_term(update, context):
     if update.message.text == 'Пропустить':
-        context.user_data['allergies'] = '—'
+        context.user_data['allergie'] = '—'
     else:
-        context.user_data['allergies'] = update.message.text
+        context.user_data['allergie'] = update.message.text
 
     reply_keyboard = [
         ['1', '3', '6', '12'],
@@ -269,7 +269,7 @@ def confirm_subscription(update, context):
             Тип меню: {context.user_data['menu_type']}
             Количество персон: {context.user_data['persons_number']}
             Количество приёмов пищи: {context.user_data['meals_number']}
-            Аллергии: {context.user_data['allergies']}
+            Аллергия: {context.user_data['allergie']}
             Срок подписки: {context.user_data['subscription_term']}\n
             Стоимость подписки составит {cost} руб.
             '''
@@ -362,7 +362,7 @@ def show_subscriptions(update, context):
                 Тип меню: {subscription['menu_type']}
                 Количество персон: {subscription['persons_number']}
                 Количество приёмов пищи: {subscription['meals_number']}
-                Аллергии: {subscription['allergies']}
+                Аллергия: {subscription['allergie']}
                 Действует до: {subscription['end_date']}
                 '''
             ),
@@ -456,9 +456,9 @@ def main() -> None:
                 MessageHandler(Filters.regex('^1$|^2$|^3$|^4$|^5$|^6$'), ask_meals_number),
             ],
             GET_MEALS_NUMBER: [
-                MessageHandler(Filters.regex('^1$|^2$|^3$|^4$|^5$|^6$'), ask_allergies),
+                MessageHandler(Filters.regex('^1$|^2$|^3$|^4$|^5$|^6$'), ask_allergie),
             ],
-            GET_ALLERGIES: [
+            GET_ALLERGIE: [
                 MessageHandler(Filters.regex('^Рыба и морепродукты$|^Мясо$|^Зерновые$|^Продукты пчеловодства$|^Орехи и бобовые$|^Молочные продукты$|^Пропустить$'), ask_subscription_term),
             ],
             GET_SUBSCRIPTION_TERM: [
