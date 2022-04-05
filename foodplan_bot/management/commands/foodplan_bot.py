@@ -473,9 +473,11 @@ def main() -> None:
             ],
             GET_MENU_TYPE: [
                 MessageHandler(
-                    Filters.regex(
-                        '^Классическое$|^Низкоуглеводное$|^Вегетарианское$|^Кето$'
-                    ),
+                    Filters.regex('^Классическое$|^Низкоуглеводное$'),
+                    ask_persons_number
+                ),
+                MessageHandler(
+                    Filters.regex('^Вегетарианское$|^Кето$'),
                     ask_persons_number
                 ),
             ],
@@ -491,9 +493,15 @@ def main() -> None:
             ],
             GET_ALLERGIE: [
                 MessageHandler(
-                    Filters.regex(
-                        '^Рыба и морепродукты$|^Мясо$|^Зерновые$|^Продукты пчеловодства$|^Орехи и бобовые$|^Молочные продукты$|^Пропустить$'
-                    ),
+                    Filters.regex('^Рыба и морепродукты$|^Мясо$|^Зерновые$'),
+                    ask_subscription_term
+                ),
+                MessageHandler(
+                    Filters.regex('^Продукты пчеловодства$|^Орехи и бобовые$'),
+                    ask_subscription_term
+                ),
+                MessageHandler(
+                    Filters.regex('^Молочные продукты$|^Пропустить$'),
                     ask_subscription_term
                 ),
             ],
