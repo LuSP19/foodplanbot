@@ -297,6 +297,8 @@ def confirm_subscription(update, context):
 
 def success_payment(update, context):
     add_subscription(context.user_data)
+    if context.user_data.get('current_subscription'):
+        del context.user_data['current_subscription']
 
     update.message.reply_text(
         'Оплата поступила. Спасибо за оформление подписки!',
