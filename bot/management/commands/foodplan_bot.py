@@ -393,15 +393,11 @@ def stub(update, context):
 
 
 def done(update, context):
-    """End conversation."""
-
-    user_data = context.user_data
-
     update.message.reply_text(
         'До свидания!',
         reply_markup=ReplyKeyboardRemove(),
     )
-    user_data.clear()
+    context.user_data.clear()
 
     return ConversationHandler.END
 
