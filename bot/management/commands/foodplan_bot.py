@@ -16,7 +16,7 @@ from telegram.ext import (
     Updater,
 )
 
-from foodplan_bot.models import User
+from bot.models import User
 from .helpers import (
     add_subscription,
     take_payment,

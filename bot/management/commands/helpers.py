@@ -7,7 +7,7 @@ from telegram import (
     ReplyKeyboardRemove,
 )
 
-from foodplan_bot.models import User
+from bot.models import User
 
 
 PRECHECKOUT, SUCCESS_PAYMENT = range(14,16)

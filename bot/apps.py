@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ProjectOrganizerConfig(AppConfig):
+class FoodPlanConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'foodplan_bot'
+    name = 'bot'
