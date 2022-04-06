@@ -20,6 +20,11 @@ from telegram.ext import (
 from foodplan_bot.models import User
 from .subscriptions import add_subscription
 
+
+PROMOCODE = 'devman'
+MONTHLY_COST = 150
+DISCOUNT = 0.1
+
 (
     REGISTER,
     CONFIRM_NAME,
@@ -258,10 +263,11 @@ def ask_promocode(update, context):
 
 
 def confirm_subscription(update, context):
-    if update.message.text == 'devman':
-        cost = int(context.user_data['subscription_term']) * 150 * 0.9
+    if update.message.text == PROMOCODE:
+        cost = (int(context.user_data['subscription_term'])
+                * MONTHLY_COST * (1 - DISCOUNT))
     else:
-        cost = int(context.user_data['subscription_term']) * 150
+        cost = int(context.user_data['subscription_term']) * MONTHLY_COST
 
     context.user_data['cost'] = cost
 
