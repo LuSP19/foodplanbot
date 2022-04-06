@@ -339,7 +339,7 @@ def success_payment(update, context):
     return MAIN_MENU
 
 
-def show_subscriptions(update, context):
+def show_subscription(update, context):
 
     user = User.objects.get(tg_id=context.user_data['tg_id'])
 
@@ -404,12 +404,12 @@ def show_subscriptions(update, context):
 
 def previous_subscription(update, context):
     context.user_data['current_subscription'] -= 1
-    return show_subscriptions(update, context)
+    return show_subscription(update, context)
 
 
 def next_subscription(update, context):
     context.user_data['current_subscription'] += 1
-    return show_subscriptions(update, context)
+    return show_subscription(update, context)
 
 
 def stub(update, context):
@@ -468,7 +468,7 @@ def main() -> None:
                     Filters.regex('^Создать подписку$'), ask_menu_type
                 ),
                 MessageHandler(
-                    Filters.regex('^Мои подписки$'), show_subscriptions
+                    Filters.regex('^Мои подписки$'), show_subscription
                 ),
             ],
             GET_MENU_TYPE: [
