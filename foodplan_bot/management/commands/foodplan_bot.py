@@ -3,7 +3,6 @@ from textwrap import dedent
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from telegram import (
-    LabeledPrice,
     KeyboardButton,
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
@@ -14,11 +13,17 @@ from telegram.ext import (
     Filters,
     MessageHandler,
     PreCheckoutQueryHandler,
-    Updater
+    Updater,
 )
 
 from foodplan_bot.models import User
-from .subscriptions import add_subscription
+from .helpers import (
+    add_subscription,
+    take_payment,
+    precheckout,
+    PRECHECKOUT,
+    SUCCESS_PAYMENT,
+)
 
 
 PROMOCODE = 'devman'
@@ -39,10 +44,8 @@ DISCOUNT = 0.1
     GET_SUBSCRIPTION_TERM,
     GET_PROMOCODE,
     TAKE_PAYMENT,
-    PRECHECKOUT,
-    SUCCESS_PAYMENT,
-    SUBSCRIPTIONS_MENU
-) = range(16)
+    SUBSCRIPTIONS_MENU,
+) = range(14)
 
 
 def start(update, context):
@@ -290,45 +293,6 @@ def confirm_subscription(update, context):
     )
 
     return TAKE_PAYMENT
-
-
-def take_payment(update, context):
-    price = context.user_data['cost']
-
-    update.message.reply_text(
-        'Формирую счёт...',
-        reply_markup=ReplyKeyboardRemove(),
-    )
-
-    provider_token = settings.SB_TOKEN
-    chat_id = update.message.chat_id
-    title = 'Ваш заказ'
-    description = f'Оплата заказа стоимостью {price} рублей'
-    payload = 'Custom-Payload'
-    currency = 'RUB'
-    prices = [LabeledPrice('Стоимость', price * 100)]
-
-    context.bot.send_invoice(
-        chat_id,
-        title,
-        description,
-        payload,
-        provider_token,
-        currency,
-        prices
-    )
-
-    return PRECHECKOUT
-
-
-def precheckout(update, _):
-    query = update.pre_checkout_query
-    if query.invoice_payload != 'Custom-Payload':
-        query.answer(ok=False, error_message='Что-то пошло не так...')
-    else:
-        query.answer(ok=True)
-
-    return SUCCESS_PAYMENT
 
 
 def success_payment(update, context):
