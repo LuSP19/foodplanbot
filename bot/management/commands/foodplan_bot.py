@@ -19,6 +19,7 @@ from telegram.ext import (
 from bot.models import User
 from .helpers import (
     add_subscription,
+    get_dish,
     take_payment,
     precheckout,
     PRECHECKOUT,
@@ -384,14 +385,15 @@ def next_subscription(update, context):
     return show_subscription(update, context)
 
 
-def stub(update, context):
-    update.message.reply_text(
-        'В разработке...',
-        reply_markup=ReplyKeyboardRemove(),
-    )
-    context.user_data.clear()
+def show_dish(update, context):
+    dish = get_dish()
+    title = dish[0]
+    link = dish[1]['link']
+    image = dish[1]['picture']
+    update.message.reply_photo(image, caption=title)
+    update.message.reply_text(link, disable_web_page_preview=True)
 
-    return ConversationHandler.END
+    return SUBSCRIPTIONS_MENU
 
 
 def done(update, context):
@@ -491,7 +493,7 @@ def main() -> None:
                 MessageHandler(
                     Filters.regex('^Создать подписку$'), ask_menu_type
                 ),
-                MessageHandler(Filters.regex('^Показать блюдо$'), stub),
+                MessageHandler(Filters.regex('^Показать блюдо$'), show_dish),
                 MessageHandler(
                     Filters.regex('^Назад$'), previous_subscription
                 ),

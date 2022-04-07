@@ -1,4 +1,6 @@
+import json
 from datetime import date
+from random import choice
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -76,3 +78,10 @@ def add_subscription(user_data):
 
     user.subscriptions = subscriptions
     user.save()
+
+
+def get_dish():
+    with open('dishes.json', encoding='utf-8') as file:
+        dishes = json.loads(file.read())
+
+    return choice(list(dishes.items()))
