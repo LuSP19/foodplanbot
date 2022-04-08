@@ -283,7 +283,8 @@ def confirm_subscription(update, context):
             Количество персон: {context.user_data['persons_number']}
             Количество приёмов пищи: {context.user_data['meals_number']}
             Аллергия: {context.user_data['allergie']}
-            Срок подписки: {context.user_data['subscription_term']}\n
+            Срок подписки: {context.user_data['subscription_term']}
+
             Стоимость подписки составит {cost} руб.
             '''
         ),
